@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Net.WebSockets;
+using System.Threading;
 using System.Threading.Tasks;
 using Gremlin.Net.Driver.Messages;
 using Gremlin.Net.Structure.IO.GraphSON;
@@ -94,11 +95,11 @@ namespace Gremlin.Net.Driver
         public int NrConnections => _connectionPool.NrConnections;
 
         /// <inheritdoc />
-        public async Task<ResultSet<T>> SubmitAsync<T>(RequestMessage requestMessage)
+        public async Task<ResultSet<T>> SubmitAsync<T>(RequestMessage requestMessage, CancellationToken cancellationToken = default)
         {
             using (var connection = _connectionPool.GetAvailableConnection())
             {
-                return await connection.SubmitAsync<T>(requestMessage).ConfigureAwait(false);
+                return await connection.SubmitAsync<T>(requestMessage, cancellationToken).ConfigureAwait(false);
             }
         }
 
